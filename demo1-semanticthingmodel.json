@@ -1,0 +1,38 @@
+{
+    "sensors": [
+	{
+	    "id": "sensor-1",
+	    "type": "sensor/temperature",
+	    "location": "living room"
+	},
+	{
+	    "id": "sensor-2",
+	    "type": "sensor/temperature",
+	    "location": "sauna"
+	},
+	{
+	    "id": "sensor-3",
+	    
+	    "type": "sensor/humidity",
+	    "location": "living room"
+	},
+	{
+	    "id": "sensor-4",
+	    "type": "sensor/humidity",
+	    "location": "sauna"
+	}
+    ],
+    "language-mappings":  [
+	{
+	    "type": "sensor/temperature",
+	    "words": [ "temperature", "heat" ],
+	    "operations": [
+		{
+		    "what": "getting the value of a sensor",
+		    "verbs": [ "get", "give", "show" ],
+		    "subjects": [ "value", "" ]
+		}
+	    ]
+	}
+    ]
+}
