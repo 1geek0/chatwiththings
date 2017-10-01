@@ -1,5 +1,6 @@
 import spacy
 from chatsenselib.variables import mLangMapDB
+from chatsenselib.responses import *
 from chatsenselib.parser1sensors import *
 from chatsenselib.parser1locations import *
 
@@ -8,7 +9,8 @@ def matchscalarquantityinlist(sr,l):
     for s in l:
         if (matchscalarquantity(sr,s)):
             answer = True;
-        matchscalarquantityinlist(sr,s["modifiers"]);
+        if (matchscalarquantityinlist(sr,s["modifiers"])):
+            answer = True;
     return(answer);
 
 def matchlocationinlist(sr,l):
@@ -16,7 +18,8 @@ def matchlocationinlist(sr,l):
     for s in l:
         if (matchlocation(sr,s)):
             answer = True;
-        matchlocationinlist(sr,s["modifiers"]);
+        if (matchlocationinlist(sr,s["modifiers"])):
+            answer = True;
     return(answer);
 
 def matchposandlemma(sr,s,expectedpos,expectedlemma):
@@ -35,19 +38,30 @@ def matchposandlemmainlist(sr,l,expectedpos,expectedlemma):
     return(answer);
 
 def foundrequestfull(sr,s):
-    print("debug: Found a " + sr["type"] + " for " + sr["quantity"] + " in location " + sr["location"]);
+    # print("debug: Found a " + sr["type"] + " for " + sr["quantity"] + " in location " + sr["location"]);
+    val = str(getSensorValue(sr["quantity"],sr["location"]));
+    return("The " + sr["quantity"] + " is " + val + ".");
 
 def foundrequestnolocation(sr,s):
-    print("debug: Found a " + sr["type"] + " for " + sr["quantity"] + " in unspecified location");
+    # print("debug: Found a " + sr["type"] + " for " + sr["quantity"] + " in unspecified location");
+    if (sr["type"] == "request for information"):
+        return("You would like to get " + sr["quantity"] + ", but for what? Can you specify where?");
+    else:
+        return("You would like to change something in " + sr["quantity"] + ", but can you specify where?");
 
 def foundrequestnosensor(sr,s):
-    print("debug: Found a " + sr["type"] + " but not clear for what");
+    # print("debug: Found a " + sr["type"] + " but not clear for what");
+    return("I'm sorry, you are talking about a " + sr["type"] + " but what for?");
     
 def foundnorequest(sr,s):
-    print("debug: Found no request");
+    # print("debug: Found no request");
+    return("I'm sorry, I did not understand. What do you want?");
     
 def lookforrequest(s):
     semanticrepr = { "type": "", "quantity": "", "location": "" }
+    # print("debug: first pos and lemma: " + s["POS_fine"] + ", " + s["lemma"]);
+    # if (len(s["modifiers"]) > 0):
+    #    print("debug: second pos and lemma: " + s["modifiers"][0]["POS_fine"] + ", " + s["modifiers"][0]["lemma"]);
     if (matchposandlemma(semanticrepr,s,"VBZ","be") and
         matchposandlemmainlist(semanticrepr,s["modifiers"],"WP","what")):
         semanticrepr["type"] = "request for information";
@@ -64,10 +78,19 @@ def lookforrequest(s):
     if (semanticrepr["type"] != ""):
         if (matchscalarquantityinlist(semanticrepr,s["modifiers"])):
             if (matchlocationinlist(semanticrepr,s["modifiers"])):
-                foundrequestfull(semanticrepr,s);
+                return(foundrequestfull(semanticrepr,s));
             else:
-                foundrequestnolocation(semanticrepr,s);
+                return(foundrequestnolocation(semanticrepr,s));
         else:
-            foundrequestnosensor(semanticrepr,s);
+            return(foundrequestnosensor(semanticrepr,s));
     else:
-        foundnorequest(semanticrepr,s);
+        return(foundnorequest(semanticrepr,s));
+
+def processrequest(doc):
+    result = "";
+    # print("debug: Looking for requests in " + doc.text + "...");
+    for s in doc.print_tree():
+        if (result != ""):
+            result = result + " ";
+        result = result + lookforrequest(s);
+    return(result)

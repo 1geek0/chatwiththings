@@ -12,7 +12,7 @@ while (my_question != "quit"):
 
     if (my_question != "quit"):
         doc = nlp(my_question)
-        print("Looking for requests in " + doc.text + "...");
-        for s in doc.print_tree():
-            lookforrequest(s)
+        response = processrequest(doc)
+        print(response)
+        
             
