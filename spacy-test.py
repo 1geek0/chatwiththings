@@ -1,5 +1,6 @@
 import spacy
 from chatsenselib.parser1 import *
+from chatsenselib.variables import *
 
 my_question = input("How can I help you?\n")
 nlp = spacy.load('en')
