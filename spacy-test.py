@@ -6,13 +6,18 @@ nlp = spacy.load('en')
 
 my_question = "";
 
-while (my_question != "quit"):
+try:
+    while (my_question != "quit"):
+        my_question = unicode(raw_input("How can I help you?\n"),"utf-8")
+        if (my_question == "quit"):
+            print("Bye!");
+        else:
+            doc = nlp(my_question)
+            response = processrequest(doc)
+            print(response)
+except EOFError:
+    print("Thank you, bye bye!");
 
-    my_question = input("How can I help you?\n")
 
-    if (my_question != "quit"):
-        doc = nlp(my_question)
-        response = processrequest(doc)
-        print(response)
-        
+
             
