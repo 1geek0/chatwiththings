@@ -1,17 +1,15 @@
 import spacy
+from chatsenselib.variables import mLangMapDB
+from chatsenselib.responses import getAllScalarQuantities, getAllLocations
 
 def isscalarquantity(sr,w):
-    if (w == "temperature" or
-        w == "humidity" or
-        w == "bubliness"):
+    if w in getAllScalarQuantities():
         return(True);
     else:
         return(False);
         
 def islocation(sr,w):
-    if (w == "sauna" or
-        w == "bathtub" or
-        w == "outside"):
+    if w in getAllLocations():
         return(True);
     else:
         return(False);

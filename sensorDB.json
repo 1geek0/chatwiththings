@@ -1,1 +1,24 @@
-{"_default": {"1": {"location": "living room", "type": "sensor/temperature", "id": "sensor-1"}, "2": {"location": "sauna", "type": "sensor/temperature", "id": "sensor-2"}, "3": {"location": "living room", "type": "sensor/humidity", "id": "sensor-3"}, "4": {"location": "sauna", "type": "sensor/humidity", "id": "sensor-4"}}}
+{
+    "_default": {
+        "1": {
+            "location": "living room",
+            "type": "sensor/temperature",
+            "id": "sensor-1"
+        },
+        "2": {
+            "location": "sauna",
+            "type": "sensor/temperature",
+            "id": "sensor-2"
+        },
+        "3": {
+            "location": "living room",
+            "type": "sensor/humidity",
+            "id": "sensor-3"
+        },
+        "4": {
+            "location": "sauna",
+            "type": "sensor/humidity",
+            "id": "sensor-4"
+        }
+    }
+}
