@@ -2,6 +2,7 @@ import spacy;
 from chatsenselib.responses import getAllScalarQuantities, getAllLocations
 
 def islocation(sr,w):
+    print("islocation(" + w + ")?");
     if w in getAllLocations():
         return(True);
     else:
@@ -14,5 +15,12 @@ def matchlocation(sr,s):
         sr["location"] = word
         return(True);
     else:
+        for anotherelem in s["modifiers"]:
+            anotherword = anotherelem["lemma"].lower();
+            print("matchlocation 2nd case: " + word + " and " + anotherword);
+            if (s["POS_fine"] == "NN" and
+                anotherelem["POS_fine"] == "NN" and
+                islocation(sr,anotherword + " " + word)):
+                sr["location"] = anotherword + " " + word;
+                return(True);
         return(False);
-    
