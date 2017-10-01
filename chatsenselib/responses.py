@@ -2,7 +2,10 @@ from chatsenselib.variables import *
 
 def getSensorValueAux(sensor):
     if (sensor['type'] == "sensor/temperature"):
-        return(21);
+        if (sensor['location'] == "sauna"):
+            return(110);
+        else:
+            return(21);
     elif (sensor['type'] == "sensor/humidity"):
         return(80);
     else:

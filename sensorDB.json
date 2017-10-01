@@ -19,6 +19,16 @@
             "location": "sauna",
             "type": "sensor/humidity",
             "id": "sensor-4"
+        },
+        "5": {
+            "location": "outside",
+            "type": "sensor/temperature",
+            "id": "sensor-5"
+        },
+        "6": {
+            "location": "outside",
+            "type": "sensor/light",
+            "id": "sensor-6"
         }
     }
 }

@@ -17,6 +17,15 @@
                 "subjects": ["value", ""]
             }],
             "type": "sensor/humidity"
+        },
+        "3": {
+            "words": ["light", "light level", "lumiosity"],
+            "operations": [{
+                "what": "getting the value of a sensor",
+                "verbs": ["get", "give", "show"],
+                "subjects": ["value", ""]
+            }],
+            "type": "sensor/light"
         }
     }
 }

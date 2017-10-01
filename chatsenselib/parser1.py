@@ -39,8 +39,11 @@ def matchposandlemmainlist(sr,l,expectedpos,expectedlemma):
 
 def foundrequestfull(sr,s):
     # print("debug: Found a " + sr["type"] + " for " + sr["quantity"] + " in location " + sr["location"]);
-    val = str(getSensorValue(sr["quantity"],sr["location"]));
-    return("The " + sr["quantity"] + " is " + val + ".");
+    if (sr["type"] == "request for information"):
+        val = str(getSensorValue(sr["quantity"],sr["location"]));
+        return("The " + sr["quantity"] + " is " + val + ".");
+    else:
+        return("Sorry, I cannot do that (yet).");
 
 def foundrequestnolocation(sr,s):
     # print("debug: Found a " + sr["type"] + " for " + sr["quantity"] + " in unspecified location");
@@ -51,7 +54,10 @@ def foundrequestnolocation(sr,s):
 
 def foundrequestnosensor(sr,s):
     # print("debug: Found a " + sr["type"] + " but not clear for what");
-    return("I'm sorry, you are talking about a " + sr["type"] + " but what for?");
+    if (sr["location"] == ""):
+        return("I'm sorry, you are talking about a " + sr["type"] + " but what for?");
+    else:
+        return("I'm sorry, you are talking about a " + sr["type"] + " but what for? What do you want to know about the " + sr["location"] + "?");
     
 def foundnorequest(sr,s):
     # print("debug: Found no request");
@@ -59,21 +65,32 @@ def foundnorequest(sr,s):
     
 def lookforrequest(s):
     semanticrepr = { "type": "", "quantity": "", "location": "" }
-    # print("debug: first pos and lemma: " + s["POS_fine"] + ", " + s["lemma"]);
-    # if (len(s["modifiers"]) > 0):
-    #    print("debug: second pos and lemma: " + s["modifiers"][0]["POS_fine"] + ", " + s["modifiers"][0]["lemma"]);
-    if (matchposandlemma(semanticrepr,s,"VBZ","be") and
+    #print("debug: first pos and lemma: " + s["POS_fine"] + ", " + s["lemma"]);
+    #if (len(s["modifiers"]) > 0):
+    #   print("debug: second pos and lemma: " + s["modifiers"][0]["POS_fine"] + ", " + s["modifiers"][0]["lemma"]);
+    if (semanticrepr["type"] == "" and
+        matchposandlemma(semanticrepr,s,"VBZ","be") and
         matchposandlemmainlist(semanticrepr,s["modifiers"],"WP","what")):
         semanticrepr["type"] = "request for information";
-    if (matchposandlemma(semanticrepr,s,"VB","show") and
+    if (semanticrepr["type"] == "" and
+        matchposandlemma(semanticrepr,s,"VB","show") and
         matchposandlemmainlist(semanticrepr,s["modifiers"],"PRP","me")):
         semanticrepr["type"] = "request for information";
-    if (matchposandlemma(semanticrepr,s,"VB","give") and
+    if (semanticrepr["type"] == "" and
+        matchposandlemma(semanticrepr,s,"VB","show")):
+        semanticrepr["type"] = "request for information";
+    if (semanticrepr["type"] == "" and
+        matchposandlemma(semanticrepr,s,"VB","give") and
         matchposandlemmainlist(semanticrepr,s["modifiers"],"PRP","me")):
         semanticrepr["type"] = "request for information";
-    if (matchposandlemma(semanticrepr,s,"VB","display")):
+    if (semanticrepr["type"] == "" and
+        matchposandlemma(semanticrepr,s,"VB","give")):
         semanticrepr["type"] = "request for information";
-    if (matchposandlemma(semanticrepr,s,"VB","set")):
+    if (semanticrepr["type"] == "" and
+        matchposandlemma(semanticrepr,s,"VB","display")):
+        semanticrepr["type"] = "request for information";
+    if (semanticrepr["type"] == "" and
+        matchposandlemma(semanticrepr,s,"VB","set")):
         semanticrepr["type"] = "command to change";
     if (semanticrepr["type"] != ""):
         if (matchscalarquantityinlist(semanticrepr,s["modifiers"])):
@@ -82,6 +99,7 @@ def lookforrequest(s):
             else:
                 return(foundrequestnolocation(semanticrepr,s));
         else:
+            matchlocationinlist(semanticrepr,s["modifiers"])
             return(foundrequestnosensor(semanticrepr,s));
     else:
         return(foundnorequest(semanticrepr,s));
