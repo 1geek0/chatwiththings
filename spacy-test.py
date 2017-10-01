@@ -14,7 +14,7 @@ try:
         else:
             doc = nlp(my_question)
             response = processrequest(doc)
-            print(response)
+            print(response+"\n")
 except EOFError:
     print("Thank you, bye bye!");
 
