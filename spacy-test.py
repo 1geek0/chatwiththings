@@ -8,13 +8,13 @@ my_question = "";
 
 try:
     while (my_question != "quit"):
-        my_question = unicode(raw_input("How can I help you?\nYou: "),"utf-8")
+        my_question = unicode(raw_input("Bot: How can I help you?\nYou: "),"utf-8")
         if (my_question == "quit"):
             print("Bye!");
         else:
             doc = nlp(my_question)
             response = processrequest(doc)
-            print("Bot: " response +"\n")
+            print("Bot: " + response +"\n")
 except EOFError:
     print("Thank you, bye bye!");
 
