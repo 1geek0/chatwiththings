@@ -17,7 +17,7 @@ def matchlocation(sr,s):
     else:
         for anotherelem in s["modifiers"]:
             anotherword = anotherelem["lemma"].lower();
-            print("matchlocation 2nd case: " + word + " and " + anotherword);
+            #print("debug: matchlocation 2nd case: " + word + " and " + anotherword);
             if (s["POS_fine"] == "NN" and
                 anotherelem["POS_fine"] == "NN" and
                 islocation(sr,anotherword + " " + word)):

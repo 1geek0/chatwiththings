@@ -34,11 +34,17 @@ def matchposandlemmainlist(sr,l,expectedpos,expectedlemma):
         matchposandlemmainlist(sr,s["modifiers"],expectedpos,expectedlemma);
     return(answer);
 
-def foundrequest(sr,s):
-    if (sr["location"] != ""):
-        print("Found a " + sr["type"] + " for " + sr["quantity"] + " in location " + sr["location"]);
-    else:
-        print("Found a " + sr["type"] + " for " + sr["quantity"] + " in unspecified location");
+def foundrequestfull(sr,s):
+    print("debug: Found a " + sr["type"] + " for " + sr["quantity"] + " in location " + sr["location"]);
+
+def foundrequestnolocation(sr,s):
+    print("debug: Found a " + sr["type"] + " for " + sr["quantity"] + " in unspecified location");
+
+def foundrequestnosensor(sr,s):
+    print("debug: Found a " + sr["type"] + " but not clear for what");
+    
+def foundnorequest(sr,s):
+    print("debug: Found no request");
     
 def lookforrequest(s):
     semanticrepr = { "type": "", "quantity": "", "location": "" }
@@ -55,7 +61,13 @@ def lookforrequest(s):
         semanticrepr["type"] = "request for information";
     if (matchposandlemma(semanticrepr,s,"VB","set")):
         semanticrepr["type"] = "command to change";
-    if (semanticrepr["type"] != "" and
-        matchscalarquantityinlist(semanticrepr,s["modifiers"])):
-        matchlocationinlist(semanticrepr,s["modifiers"]);
-        foundrequest(semanticrepr,s);
+    if (semanticrepr["type"] != ""):
+        if (matchscalarquantityinlist(semanticrepr,s["modifiers"])):
+            if (matchlocationinlist(semanticrepr,s["modifiers"])):
+                foundrequestfull(semanticrepr,s);
+            else:
+                foundrequestnolocation(semanticrepr,s);
+        else:
+            foundrequestnosensor(semanticrepr,s);
+    else:
+        foundnorequest(semanticrepr,s);
