@@ -1,37 +1,8 @@
 import spacy
 from chatsenselib.variables import mLangMapDB
-from chatsenselib.responses import getAllScalarQuantities, getAllLocations
+from chatsenselib.parser1sensors import *
+from chatsenselib.parser1locations import *
 
-def isscalarquantity(sr,w):
-    if w in getAllScalarQuantities():
-        return(True);
-    else:
-        return(False);
-        
-def islocation(sr,w):
-    if w in getAllLocations():
-        return(True);
-    else:
-        return(False);
-        
-def matchscalarquantity(sr,s):
-    word = s["lemma"].lower()
-    if (s["POS_fine"] == "NN" and
-        isscalarquantity(sr,word)):
-        sr["quantity"] = word
-        return(True);
-    else:
-        return(False);
-    
-def matchlocation(sr,s):
-    word = s["lemma"].lower()
-    if (s["POS_fine"] == "NN" and
-        islocation(sr,word)):
-        sr["location"] = word
-        return(True);
-    else:
-        return(False);
-    
 def matchscalarquantityinlist(sr,l):
     answer = False;
     for s in l:
