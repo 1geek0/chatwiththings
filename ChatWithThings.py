@@ -5,18 +5,25 @@ from chatsenselib.variables import *
 nlp = spacy.load('en')
 
 my_question = "";
+first = True;
+
+print("");
 
 try:
     while (my_question != "quit"):
-        my_question = unicode(raw_input("Bot: How can I help you?\nYou: "),"utf-8")
+        if (first):
+            my_question = unicode(raw_input("Bot: How can I help you?\nYou: "),"utf-8")
+        else:
+            my_question = unicode(raw_input("You: "),"utf-8")
+	first = False
         if (my_question == "quit"):
-            print("Bye!");
+            print("\nBot: Bye!");
         else:
             doc = nlp(my_question)
             response = processrequest(doc)
             print("Bot: " + response +"\n")
 except EOFError:
-    print("Thank you, bye bye!");
+    print("Bot: Thank you, bye bye!");
 
 
 
